@@ -18,16 +18,20 @@ class NegativeDB:
 
         we have delete and insert operations. At the moment, 
         update is a combination of delete and insert operations
+
+        Unfortunately, the claims of the paper is not fully realized, 
+        unless there are secret source that the authors of the left out.
     '''
     def __init__(self):
         self.txtHandler = TEXTHANDLER()
         self.crc = CRC()
         self.tree = Trie()
-        Param = namedtuple('Param', ['l', 'r', 'k', 'q'])
+        Param = namedtuple('Param', ['l', 'r', 'k', 'q', 'matchRatio'])
         # Adding settings
-        # 'l' is length of binary input without CRC bits, , 'r' is a value to manage superfluous solution, 'k' varies with r, 'q' is a probability for modifying the process
-        self.settings = Param(1000, 5.5, 200, 0.5)
-        #self.settings = Param(8, 1, 3, 0.5)
+        # 'l' is length of binary input without CRC bits, , 'r' is a value to manage superfluous solution, 
+        # 'k' varies with r and it is the matching bits, 'q' is a probability for modifying the process
+        self.settings = Param(1000, 5.5, 650, 0.5, 0.9)
+        #self.settings = Param(8, 1, 3, 0.5, 0.9)
 
     def __generateHardToReverseRecords (self, sBin):
         '''
@@ -145,14 +149,12 @@ class NegativeDB:
             to replace * which is a wildcart matching. my attempt to create 
             binary while  exponential dimension as strings are compressed with *.
         '''
-
         # if db is empty
         if self.__isEmpty():
             # Unfortunately, an empty database contains the entireuniverse, but we want to avoid it until we have at least an entry.
             return False
 
         return not self.tree.find(recordBin)
-
 
     def __find (self, recordBin):
         '''
@@ -164,17 +166,11 @@ class NegativeDB:
             output:
                 return true in data not in NDB, false otherwise
         '''
-        print ("find recordBin: {}".format(recordBin))
-
-        print ("(find)result match *: {}".format(self.tree.query("*")) )
-        print ("(find)result match 0: {}".format(self.tree.query("0")) )
-        print ("(find)result match 1: {}".format(self.tree.query("1")) )
-
+        targetMatchRatio = self.settings.matchRatio
         # if db is empty
         if self.__isEmpty():
             # Unfortunately, an empty database contains the entireuniverse, but we want to avoid it until we have at least an entry.
             return False
-
 
         # create hard to reverse record
         ndbRecords = self.__generateHardToReverseRecords (recordBin)
@@ -185,7 +181,7 @@ class NegativeDB:
 
         matchRatio = float (match / len(ndbRecords))
 
-        if matchRatio > 0.9:
+        if matchRatio > targetMatchRatio:
             return True
 
         return False
@@ -211,7 +207,6 @@ class NegativeDB:
         # delete records in a trie
         for record in ndbRecords:
             isDeleted = self.tree.remove(record)
-            print ("isDeleted: {}".format(isDeleted))
 
         return ndbRecords
 
@@ -259,7 +254,7 @@ class NegativeDB:
 if __name__ == '__main__':
     ndb = NegativeDB()
 
-    #self.settings = Param(8, 1, 3, 0.5)
+    #self.settings = Param(8, 1, 3, 0.5, 0.9)
     #text = 'a'
     #indbRecord = ndb.Insert (text)
     #print ("Inserted records: {}".format(indbRecord))
@@ -312,7 +307,6 @@ if __name__ == '__main__':
     print ("========================================")
     print ("Inserted records: {}".format(ndbRecord))
 
-    print ("ndb.tree.root.counter: {}".format(ndb.tree.root.counter))
     status = ndb.Find (text)
     print ("========================================")
     print ("========================================")
