@@ -15,11 +15,15 @@ class AServer:
         Reference: https://docs-assets.developer.apple.com/ml-research/papers/learning-with-privacy-at-scale.pdf
     """
     def __init__(self):
-        Param = namedtuple('Param', ['k', 'm', 'epsilon'])
+        self.Param = namedtuple('Param', ['k', 'm', 'epsilon'])
         # Adding settings
-        self.settings = Param(65536, 1024, 4)
+        self.settings = self.Param(65536, 1024, 4)
         self.dataSize = None
         self.helper = helper.Helper(self.settings, SEED)
+
+    def SetNoise(self, epsilon=4):
+        #self.settings.epsilon = epsilon
+        self.settings = self.Param(65536, 1024, epsilon)
 
     def SketchHCMS(self, snapshotLst):
         '''
@@ -56,7 +60,7 @@ class AServer:
         k = self.settings.k
         m = self.settings.m
         n = self.dataSize
-        print ("(k: {}, m: {}, n: {})".format(k,m,n))
+        #print ("(k: {}, m: {}, n: {})".format(k,m,n))
         sumVal = 0
         dataVal = self.helper.CreateMsgRepresentation (event)
 
@@ -83,7 +87,7 @@ class AServer:
         for event in eventLst:
             freq = self.__histogram (event, mHmat, hashFamily)
             # possible to have negative because hadamard matrices has negative entries
-            resDict[event] = math.ceil ( abs(freq) )
+            resDict[event] = int(math.ceil ( abs(freq) ))
 
         return resDict
 

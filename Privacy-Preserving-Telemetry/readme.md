@@ -13,8 +13,19 @@ The list of code files.
 
 - textProcessing.py: This is used for managing textual input.
 
-Run the code
-$ python contract.py
+- evals.py: This has a list of experiments.
+
+## How to run
++ Setup environment
+```
+virtualenv -p /usr/bin/python py2env
+source py2env/bin/activate
+pip install -r requirements.txt
+```
++ Executing from command line
+```
+python contract.py
+```
 
 
 blog link: https://kenluck2001.github.io/blog_post/privacy_at_your_fingertips.html

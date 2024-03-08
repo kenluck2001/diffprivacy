@@ -15,11 +15,15 @@ class AClient:
         Reference: https://docs-assets.developer.apple.com/ml-research/papers/learning-with-privacy-at-scale.pdf
     """
     def __init__(self):
-        Param = namedtuple('Param', ['k', 'm', 'epsilon'])
+        self.Param = namedtuple('Param', ['k', 'm', 'epsilon'])
         # Adding settings
-        self.settings = Param(65536, 1024, 4)
+        self.settings = self.Param(65536, 1024, 4)
         self.dataSize = None
         self.helper = helper.Helper(self.settings, SEED)
+
+    def SetNoise(self, epsilon=4):
+        #self.settings.epsilon = epsilon
+        self.settings = self.Param(65536, 1024, epsilon)
 
     def getSettings (self):
         return self.settings
