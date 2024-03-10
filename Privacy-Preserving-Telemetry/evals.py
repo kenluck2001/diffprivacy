@@ -48,7 +48,7 @@ def getDataProportion(sampled_event_lst):
     return output_dict
 
 def experimentSizeByProportion():
-    size_lst = [1000000, 2000000, 3000000, 4000000, 5000000]
+    size_lst = [10000, 20000, 30000, 40000, 50000]
     prob_lst = [0.6, 0.3, 0.1] 
     event_lst = ["walking", "running", "sleeping"] 
     output_dict = {}
@@ -67,7 +67,7 @@ def experimentSizeByProportion():
     return output_dict
 
 def experimentNoiseByProportion():
-    size = 1000000
+    size = 10000
     epsilon_lst = [4, 8, 12, 16, 20]
     prob_lst = [0.6, 0.3, 0.1] 
     event_lst = ["walking", "running", "sleeping"] 
@@ -128,14 +128,14 @@ if __name__ == '__main__':
     # experiment for impact of size on randomized proportion
     xlabel = 'Size of Original data before Randomization'
     ylabel = 'Size proportions of data by label after Randomization'
-    imagefile = "sizebyproportion.png"
+    imagefile = "sizebyproportion2.png"
     res_map = experimentSizeByProportion()
     draw(res_map, xlabel, ylabel, imagefile)
 
     # experiment for impact of noise on randomized proportion
     xlabel = 'Noise level'
     ylabel = 'Size proportions of data by label after Randomization'
-    imagefile = "noisebyproportion.png"
+    imagefile = "noisebyproportion2.png"
     res_map = experimentNoiseByProportion()
     draw(res_map, xlabel, ylabel, imagefile)
 
